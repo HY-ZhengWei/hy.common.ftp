@@ -34,8 +34,10 @@ import org.hy.common.ftp.event.FTPListener;
  * @author   ZhengWei(HY)
  * @version  V1.0  2012-06-04
  *           V2.0  2020-05-20  添加：1. 支持文件流的上传
- *                                   2. 支持追加模式（断点续传）
- *                                   3. FileDataPacket 文件的数据包的上传（默认开启断点续传）
+ *                             添加：2. 支持追加模式（断点续传）
+ *                             添加：3. FileDataPacket 文件的数据包的上传（默认开启断点续传）
+ *                             添加：4. 创建FTP目录。可连续创建多级目录
+ *                                   
  */
 public final class FTPHelp 
 {
@@ -588,6 +590,8 @@ public final class FTPHelp
     /**
      * 上传文件
      * 
+     * 1. 支持自动创建目录
+     * 
      * @param i_LocalDataInput  本地文件的流（方法内不关闭流）
      * @param i_LocalDataSize   本地文件流的大小
      * @param i_RemoteFullName  远程文件的全路径
@@ -612,6 +616,14 @@ public final class FTPHelp
         
         try 
         {
+            if ( !Help.isNull(i_RemoteFullName) )
+            {
+                String [] v_RFNameArr   = i_RemoteFullName.split("/");
+                String    v_DirFullName = StringHelp.replaceLast(i_RemoteFullName ,"/" + v_RFNameArr[v_RFNameArr.length - 1] ,"");
+                
+                this.makeDirectory(v_DirFullName);
+            }
+            
             v_DataInput      = i_LocalDataInput;
             byte [] v_Buffer = new byte[$BufferSize];
             int     v_RSize  = 0;
@@ -676,6 +688,7 @@ public final class FTPHelp
         } 
         catch (Exception e) 
         {
+            e.printStackTrace();
             v_Event.setEndTime();
             return e.toString();
         }
@@ -699,6 +712,61 @@ public final class FTPHelp
         }
         
         return null;
+    }
+    
+    
+    
+    /**
+     * 创建FTP目录。可连续创建多级目录
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2020-05-20
+     * @version     v1.0
+     *
+     * @param i_DirFullName   目录的全路径名称
+     * @return                返回值表示创建的目录数量
+     */
+    public int makeDirectory(String i_DirFullName)
+    {
+        if ( Help.isNull(i_DirFullName) )
+        {
+            return 0;
+        }
+        
+        if ( this.ftpClient == null )
+        {
+            return -99;
+        }
+        
+        try
+        {
+            String []     v_DirFullNameArr = i_DirFullName.trim().split("/");
+            StringBuilder v_DirBuffer      = new StringBuilder();
+            int           v_CreateCount    = 0;
+            
+            for (String v_DirName : v_DirFullNameArr)
+            {
+                if ( Help.isNull(v_DirName) )
+                {
+                    continue;
+                }
+                
+                v_DirBuffer.append("/").append(v_DirName);
+                
+                if ( this.ftpClient.makeDirectory(v_DirBuffer.toString()) )
+                {
+                    v_CreateCount++;
+                }
+            }
+            
+            return v_CreateCount;
+        }
+        catch (Exception exce)
+        {
+            exce.printStackTrace();
+        }
+        
+        return -1;
     }
     
     
