@@ -4,7 +4,7 @@
 
   <groupId>org</groupId>
   <artifactId>hy.common.ftp</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <packaging>jar</packaging>
 
   <name>hy.common.ftp</name>
@@ -32,17 +32,24 @@
     </dependency>
     
     <!-- https://github.com/HY-ZhengWei/hy.common.base -->
-	<dependency>
-	    <groupId>org</groupId>
-	    <artifactId>hy.common.base</artifactId>
-	    <version>1.0.148</version>
-	</dependency>
-	
-	<dependency>
-	    <groupId>commons-net</groupId>
-	    <artifactId>commons-net</artifactId>
-	    <version>3.6</version>
-	</dependency>
-	
+    <dependency>
+        <groupId>org</groupId>
+        <artifactId>hy.common.base</artifactId>
+        <version>1.0.152</version>
+    </dependency>
+    
+    <!-- https://github.com/HY-ZhengWei/hy.common.file -->
+    <dependency>
+        <groupId>org</groupId>
+        <artifactId>hy.common.file</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>commons-net</groupId>
+        <artifactId>commons-net</artifactId>
+        <version>3.6</version>
+    </dependency>
+    
   </dependencies>
 </project>
