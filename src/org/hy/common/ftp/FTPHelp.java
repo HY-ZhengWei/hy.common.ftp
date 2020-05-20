@@ -37,6 +37,7 @@ import org.hy.common.ftp.event.FTPListener;
  *                             添加：2. 支持追加模式（断点续传）
  *                             添加：3. FileDataPacket 文件的数据包的上传（默认开启断点续传）
  *                             添加：4. 创建FTP目录。可连续创建多级目录
+ *                             添加：5. 支持中文目录及中文文件
  *                                   
  */
 public final class FTPHelp 
@@ -206,7 +207,7 @@ public final class FTPHelp
         
         try 
         {
-            v_Input          = this.ftpClient.retrieveFileStream(i_RemoteFullName);
+            v_Input          = this.ftpClient.retrieveFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"SO-8859-1"));
             v_DataInput      = new DataInputStream(v_Input);
             v_SaveFile       = new File(i_SaveFullName);
             v_SaveFileOutput = new FileOutputStream(v_SaveFile);
@@ -351,7 +352,7 @@ public final class FTPHelp
         
         try 
         {
-            v_Input          = this.ftpClient.retrieveFileStream(i_RemoteFullName);
+            v_Input          = this.ftpClient.retrieveFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"SO-8859-1"));
             v_DataInput      = new DataInputStream(v_Input);
             byte [] v_Buffer = new byte[$BufferSize];
             int     v_RSize  = 0;
@@ -591,6 +592,7 @@ public final class FTPHelp
      * 上传文件
      * 
      * 1. 支持自动创建目录
+     * 2. 支持中文目录
      * 
      * @param i_LocalDataInput  本地文件的流（方法内不关闭流）
      * @param i_LocalDataSize   本地文件流的大小
@@ -630,11 +632,11 @@ public final class FTPHelp
             
             if ( i_IsAppend )
             {                                              
-                v_Output = this.ftpClient.appendFileStream(i_RemoteFullName);
+                v_Output = this.ftpClient.appendFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"ISO-8859-1"));
             }
             else
             {
-                v_Output = this.ftpClient.storeFileStream(i_RemoteFullName);
+                v_Output = this.ftpClient.storeFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"ISO-8859-1"));
             }
             
             v_IsContinue = this.fireFTPBeforeListener(v_Event);
@@ -719,6 +721,8 @@ public final class FTPHelp
     /**
      * 创建FTP目录。可连续创建多级目录
      * 
+     * 1. 支持中文目录
+     * 
      * @author      ZhengWei(HY)
      * @createDate  2020-05-20
      * @version     v1.0
@@ -751,7 +755,7 @@ public final class FTPHelp
                     continue;
                 }
                 
-                v_DirBuffer.append("/").append(v_DirName);
+                v_DirBuffer.append("/").append(new String(v_DirName.getBytes("GBK") ,"SO-8859-1"));
                 
                 if ( this.ftpClient.makeDirectory(v_DirBuffer.toString()) )
                 {
@@ -787,7 +791,7 @@ public final class FTPHelp
         
         try
         {
-            boolean v_Ret = this.ftpClient.deleteFile(i_RemoteFullName);
+            boolean v_Ret = this.ftpClient.deleteFile(new String(i_RemoteFullName.getBytes("GBK") ,"SO-8859-1"));
             
             if ( !v_Ret )
             {
