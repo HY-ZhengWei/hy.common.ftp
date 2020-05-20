@@ -15,8 +15,11 @@ import java.util.Iterator;
 import org.apache.commons.net.ftp.FTPClient;
 
 import org.hy.common.ByteHelp;
+import org.hy.common.ExpireMap;
+import org.hy.common.Help;
 import org.hy.common.StringHelp;
 import org.hy.common.file.FileDataPacket;
+import org.hy.common.file.FileHelp;
 import org.hy.common.ftp.event.DefaultFTPEvent;
 import org.hy.common.ftp.event.FTPEvent;
 import org.hy.common.ftp.event.FTPListener;
@@ -45,6 +48,9 @@ public final class FTPHelp
     /** 缓存大小 */
     private static final int $BufferSize     = 4 * 1024;
     
+    /** 临时记录最新一次数据包信息 */
+    private static final ExpireMap<String ,FileDataPacket> $DataPackets = new ExpireMap<String ,FileDataPacket>();
+    
     
     
     private FTPInfo                    ftpInfo;
@@ -56,6 +62,9 @@ public final class FTPHelp
     
     /** 自定义事件的监听器集合--文件拷贝 */
     private Collection<FTPListener>    ftpListeners;
+    
+    /** 数据包的超时时长（单位：秒） */
+    private long                       dataPacketTimeOut = 10 * 60;
     
     
     
@@ -503,16 +512,26 @@ public final class FTPHelp
      * @version     v1.0
      *
      * @param i_FileDataPacket  文件的数据包（默认开启断点续传）
-     * @return  上传成功返回 null 。否则返回异常信息
+     * @return                  本次数据包上传结果。请参考 FileHelp.$Upload_* 的系列说明 
      */
-    public String upload(FileDataPacket i_FileDataPacket)
+    public int upload(FileDataPacket i_FileDataPacket)
     {
         ByteArrayInputStream v_ByteInput = new ByteArrayInputStream(i_FileDataPacket.getDataByte());
         DataInputStream      v_DataInput = new DataInputStream(v_ByteInput);
+        String               v_UploadRet = null;
+        
+        FileDataPacket v_Old = $DataPackets.get(i_FileDataPacket.getName());
+        if ( v_Old != null )
+        {
+            if ( v_Old.getDataNo().intValue() >= i_FileDataPacket.getDataNo().intValue() )
+            {
+                return FileHelp.$Upload_GoOn;
+            }
+        }
         
         try 
         {
-            return this.upload(v_DataInput ,i_FileDataPacket.getDataByte().length ,i_FileDataPacket.getName() ,true);
+            v_UploadRet = this.upload(v_DataInput ,i_FileDataPacket.getDataByte().length ,i_FileDataPacket.getName() ,true);
         }
         finally
         {
@@ -543,6 +562,24 @@ public final class FTPHelp
                 
                 v_ByteInput = null;
             }
+        }
+        
+        if ( Help.isNull(v_UploadRet) )
+        {
+            if ( i_FileDataPacket.getDataCount().intValue() == i_FileDataPacket.getDataNo().intValue() )
+            {
+                $DataPackets.remove(i_FileDataPacket.getName());
+                return FileHelp.$Upload_Finish;
+            }
+            else
+            {
+                $DataPackets.put(i_FileDataPacket.getName() ,i_FileDataPacket ,this.dataPacketTimeOut);
+                return FileHelp.$Upload_GoOn;
+            }
+        }
+        else
+        {
+            return FileHelp.$Upload_Error;
         }
     }
     
