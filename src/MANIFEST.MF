@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.2
+Manifest-Version: 1.0.3
 Created-By: HY.ZhengWei@qq.com  2012
-Specification-Version: 1.0.2  2020-05-20
+Specification-Version: 1.0.3  2020-05-22
 SourceCode: https://github.com/HY-ZhengWei/hy.common.ftp
 Build-JDK: 1.6

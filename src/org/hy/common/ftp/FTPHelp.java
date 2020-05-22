@@ -207,7 +207,7 @@ public final class FTPHelp
         
         try 
         {
-            v_Input          = this.ftpClient.retrieveFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"SO-8859-1"));
+            v_Input          = this.ftpClient.retrieveFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"ISO-8859-1"));
             v_DataInput      = new DataInputStream(v_Input);
             v_SaveFile       = new File(i_SaveFullName);
             v_SaveFileOutput = new FileOutputStream(v_SaveFile);
@@ -352,7 +352,7 @@ public final class FTPHelp
         
         try 
         {
-            v_Input          = this.ftpClient.retrieveFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"SO-8859-1"));
+            v_Input          = this.ftpClient.retrieveFileStream(new String(i_RemoteFullName.getBytes("GBK") ,"ISO-8859-1"));
             v_DataInput      = new DataInputStream(v_Input);
             byte [] v_Buffer = new byte[$BufferSize];
             int     v_RSize  = 0;
@@ -755,7 +755,7 @@ public final class FTPHelp
                     continue;
                 }
                 
-                v_DirBuffer.append("/").append(new String(v_DirName.getBytes("GBK") ,"SO-8859-1"));
+                v_DirBuffer.append("/").append(new String(v_DirName.getBytes("GBK") ,"ISO-8859-1"));
                 
                 if ( this.ftpClient.makeDirectory(v_DirBuffer.toString()) )
                 {
@@ -791,7 +791,7 @@ public final class FTPHelp
         
         try
         {
-            boolean v_Ret = this.ftpClient.deleteFile(new String(i_RemoteFullName.getBytes("GBK") ,"SO-8859-1"));
+            boolean v_Ret = this.ftpClient.deleteFile(new String(i_RemoteFullName.getBytes("GBK") ,"ISO-8859-1"));
             
             if ( !v_Ret )
             {
