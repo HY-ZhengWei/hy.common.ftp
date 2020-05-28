@@ -42,12 +42,6 @@ import org.hy.common.ftp.event.FTPListener;
  */
 public final class FTPHelp 
 {
-    /** 连接超时时长 */
-    private static final int $ConnectTimeOut = 30 * 1000;
-    
-    /** 读取文件的超时时长 */
-    private static final int $ReadTimeOut    = 2 * 60 * 1000; 
-    
     /** 缓存大小 */
     private static final int $BufferSize     = 4 * 1024;
     
@@ -117,16 +111,44 @@ public final class FTPHelp
             }
             
             this.ftpClient = new FTPClient();
-            this.ftpClient.connect(this.ftpInfo.getIp() ,this.ftpInfo.getPort());
-            this.ftpClient.login(this.ftpInfo.getUser() ,this.ftpInfo.getPassword());
-            if ( this.ftpInfo.isPassiveMode() )
+            this.ftpClient.setProxy(                       this.ftpInfo.getProxy());
+            this.ftpClient.setDefaultTimeout(              this.ftpInfo.getDefaultTimeout());
+            this.ftpClient.setConnectTimeout(              this.ftpInfo.getConnectTimeout());
+            this.ftpClient.setControlKeepAliveReplyTimeout(this.ftpInfo.getControlKeepAliveReplyTimeout());
+            this.ftpClient.setControlKeepAliveTimeout(     this.ftpInfo.getControlKeepAliveTimeout());
+            this.ftpClient.setDataTimeout(                 this.ftpInfo.getDataTimeout());
+            this.ftpClient.setSoTimeout(                   this.ftpInfo.getSoTimeout());
+            this.ftpClient.connect(this.ftpInfo.getIp()   ,this.ftpInfo.getPort());
+            this.ftpClient.login(  this.ftpInfo.getUser() ,this.ftpInfo.getPassword());
+            
+            if ( this.ftpInfo.isLocalPassiveMode() )
+            {
+                this.ftpClient.enterLocalPassiveMode();
+            }
+            if ( this.ftpInfo.isRemotePassiveMode() )
             {
                 this.ftpClient.enterRemotePassiveMode();
             }
             this.ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-            this.ftpClient.setConnectTimeout($ConnectTimeOut);
-            this.ftpClient.setDataTimeout($ReadTimeOut);
-            this.ftpClient.changeWorkingDirectory(this.ftpInfo.getInitPath());
+            
+            this.ftpClient.setBufferSize(                  this.ftpInfo.getBufferSize());
+            this.ftpClient.setReceiveBufferSize(           this.ftpInfo.getReceiveBufferSize());
+            this.ftpClient.setReceieveDataSocketBufferSize(this.ftpInfo.getReceiveDataSocketBufferSize());
+            this.ftpClient.setSendBufferSize(              this.ftpInfo.getSendBufferSize());
+            this.ftpClient.setSendDataSocketBufferSize(    this.ftpInfo.getSendDataSocketBufferSize());
+            
+            this.ftpClient.setStrictMultilineParsing(      this.ftpInfo.isStrictMultilineParsing());
+            this.ftpClient.setStrictReplyParsing(          this.ftpInfo.isStrictReplyParsing());
+            this.ftpClient.setUseEPSVwithIPv4(             this.ftpInfo.isUseEPSVwithIPv4());
+            this.ftpClient.setRemoteVerificationEnabled(   this.ftpInfo.isRemoteVerificationEnabled());
+            
+            this.ftpClient.setTcpNoDelay(                  this.ftpInfo.getTcpNoDelay());
+            this.ftpClient.setKeepAlive(                   this.ftpInfo.getKeepAlive());
+            this.ftpClient.setListHiddenFiles(             this.ftpInfo.getListHiddenFiles());
+            this.ftpClient.setControlEncoding(             this.ftpInfo.getControlEncoding());
+            this.ftpClient.setAutodetectUTF8(              this.ftpInfo.getAutodetectUTF8());
+            this.ftpClient.setCharset(                     this.ftpInfo.getCharset());
+            this.ftpClient.changeWorkingDirectory(         this.ftpInfo.getInitPath());
         } 
         catch (Exception e) 
         {

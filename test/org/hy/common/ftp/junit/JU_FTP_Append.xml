@@ -15,7 +15,8 @@
             <port>21</port>
             <user>cgftp</user>
             <password encrypt="org.hy.common.StringHelp">cgftp</password>
-            <passiveMode>false</passiveMode>
+            <localPassiveMode>true</localPassiveMode>
+            <remotePassiveMode>false</remotePassiveMode>
         </ftp>
         
     </xconfig>

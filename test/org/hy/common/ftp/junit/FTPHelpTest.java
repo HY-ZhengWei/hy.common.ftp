@@ -31,7 +31,7 @@ public class FTPHelpTest
 		v_FTPInfo.setPort(21);
 		v_FTPInfo.setUser("ftp");
 		v_FTPInfo.setPassword("ftp");
-		v_FTPInfo.setPassiveMode(false);
+		v_FTPInfo.setLocalPassiveMode(false);
 		
 		FTPHelp v_FTPHelp = new FTPHelp(v_FTPInfo);
 		
@@ -73,7 +73,7 @@ public class FTPHelpTest
         v_FTPInfo.setPort(21);
         v_FTPInfo.setUser("ftp");
         v_FTPInfo.setPassword("ftp");
-        v_FTPInfo.setPassiveMode(false);
+        v_FTPInfo.setLocalPassiveMode(false);
         v_FTPInfo.setInitPath("/share/ftp");
         
         FTPHelp v_FTPHelp = new FTPHelp(v_FTPInfo);
@@ -104,7 +104,7 @@ public class FTPHelpTest
 		v_FTPInfo.setPort(21);
 		v_FTPInfo.setUser("ftp01");
 		v_FTPInfo.setPassword("password01");
-		v_FTPInfo.setPassiveMode(false);
+		v_FTPInfo.setLocalPassiveMode(false);
 		v_FTPInfo.setInitPath("/ftp/file01");
 		
 		FTPHelp v_FTPHelp = new FTPHelp(v_FTPInfo);

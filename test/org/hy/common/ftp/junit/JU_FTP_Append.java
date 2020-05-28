@@ -46,8 +46,7 @@ public class JU_FTP_Append
         FTPHelp v_Ftp = new FTPHelp((FTPInfo)XJava.getObject("FTPServer01"));
         
         v_Ftp.connect();
-        v_Ftp.upload("D:\\WorkSpace_SearchDesktop\\hy.common.ftp\\lib\\hy.common.xjava.jar" ,"/attendence/2020-05-22/52139/test.jar" ,true);
-        v_Ftp.upload("D:\\WorkSpace_SearchDesktop\\hy.common.ftp\\lib\\hy.common.xjava.jar" ,"/郑伟/1/2/3/test.jar" ,true);
+        v_Ftp.upload("D:\\WorkSpace_SearchDesktop\\hy.common.ftp\\lib\\hy.common.xjava.jar" ,"/attendence/2020-05-28/52139/test.jar" ,true);
         v_Ftp.close();
     }
     
