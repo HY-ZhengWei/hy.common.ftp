@@ -102,7 +102,6 @@ public final class FTPHelp
             return "Fpt info is null.";
         }
         
-        
         try 
         {
             if ( this.ftpClient != null )
@@ -110,14 +109,17 @@ public final class FTPHelp
                 this.close();
             }
             
+            
             this.ftpClient = new FTPClient();
+            
+            
             this.ftpClient.setProxy(                       this.ftpInfo.getProxy());
             this.ftpClient.setDefaultTimeout(              this.ftpInfo.getDefaultTimeout());
             this.ftpClient.setConnectTimeout(              this.ftpInfo.getConnectTimeout());
             this.ftpClient.setControlKeepAliveReplyTimeout(this.ftpInfo.getControlKeepAliveReplyTimeout());
             this.ftpClient.setControlKeepAliveTimeout(     this.ftpInfo.getControlKeepAliveTimeout());
             this.ftpClient.setDataTimeout(                 this.ftpInfo.getDataTimeout());
-            this.ftpClient.setSoTimeout(                   this.ftpInfo.getSoTimeout());
+            
             this.ftpClient.connect(this.ftpInfo.getIp()   ,this.ftpInfo.getPort());
             this.ftpClient.login(  this.ftpInfo.getUser() ,this.ftpInfo.getPassword());
             
@@ -137,25 +139,24 @@ public final class FTPHelp
             this.ftpClient.setSendBufferSize(              this.ftpInfo.getSendBufferSize());
             this.ftpClient.setSendDataSocketBufferSize(    this.ftpInfo.getSendDataSocketBufferSize());
             
+            
             this.ftpClient.setStrictMultilineParsing(      this.ftpInfo.isStrictMultilineParsing());
             this.ftpClient.setStrictReplyParsing(          this.ftpInfo.isStrictReplyParsing());
             this.ftpClient.setUseEPSVwithIPv4(             this.ftpInfo.isUseEPSVwithIPv4());
             this.ftpClient.setRemoteVerificationEnabled(   this.ftpInfo.isRemoteVerificationEnabled());
             
-            this.ftpClient.setTcpNoDelay(                  this.ftpInfo.getTcpNoDelay());
-            this.ftpClient.setKeepAlive(                   this.ftpInfo.getKeepAlive());
             this.ftpClient.setListHiddenFiles(             this.ftpInfo.getListHiddenFiles());
             this.ftpClient.setControlEncoding(             this.ftpInfo.getControlEncoding());
             this.ftpClient.setAutodetectUTF8(              this.ftpInfo.getAutodetectUTF8());
             this.ftpClient.setCharset(                     this.ftpInfo.getCharset());
             this.ftpClient.changeWorkingDirectory(         this.ftpInfo.getInitPath());
         } 
-        catch (Exception e) 
+        catch (Exception exce) 
         {
             this.ftpClient = null;
-            return e.getMessage();
+            exce.printStackTrace();
+            return exce.getMessage();
         }
-        
         
         return null;
     }
